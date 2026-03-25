@@ -72,7 +72,7 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
     input.dataDesligamento <= input.dataAdmissao
 
   return (
-    <Card>
+    <Card className="no-print">
       <CardHeader>
         <CardTitle>Dados do vínculo empregatício</CardTitle>
       </CardHeader>

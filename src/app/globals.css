@@ -137,4 +137,17 @@
     background: white;
     color: black;
   }
+  /* Hide form, show only results */
+  form,
+  [data-print="no-print"] {
+    display: none !important;
+  }
+  /* Ensure grid shows single column for print */
+  .lg\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+  /* Remove shadows and borders that look bad in print */
+  * {
+    box-shadow: none !important;
+  }
 }
