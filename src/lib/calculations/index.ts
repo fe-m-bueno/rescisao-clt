@@ -1,10 +1,10 @@
 import {
+  AvisoPrevioType,
   type CalculationResult,
   type CalculatorInput,
   type FgtsInfo,
   type LineItem,
   type SeguroDesempregoInfo,
-  AvisoPrevioType,
   TerminationType,
 } from '../types'
 import {
@@ -17,10 +17,7 @@ import { calcularMultaFgts, estimarSaldoFgts } from './fgts'
 import { calcularInss } from './inss'
 import { calcularIrrf } from './irrf'
 import { calcularSaldoSalario } from './saldo-salario'
-import {
-  calcularParcelas,
-  calcularValorParcela,
-} from './seguro-desemprego'
+import { calcularParcelas, calcularValorParcela } from './seguro-desemprego'
 import {
   calcularAnosCompletos,
   calcularDiasNoMes,
@@ -212,8 +209,7 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
   verbas.push({
     label: `Saldo de salário (${diasNoMes} dias)`,
     value: saldoSalario,
-    description:
-      'Salário proporcional aos dias trabalhados no último mês.',
+    description: 'Salário proporcional aos dias trabalhados no último mês.',
   })
 
   if (avisoValue > 0) {
@@ -260,8 +256,7 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
     verbas.push({
       label: `Multa ${fgtsInfo.multaPercentual}% FGTS`,
       value: multaFgts,
-      description:
-        'Multa sobre o saldo do FGTS que o empregador deve pagar.',
+      description: 'Multa sobre o saldo do FGTS que o empregador deve pagar.',
     })
   }
 
@@ -274,8 +269,7 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
     deducoes.push({
       label: 'INSS',
       value: inssValor,
-      description:
-        'Contribuição ao INSS descontada do saldo de salário.',
+      description: 'Contribuição ao INSS descontada do saldo de salário.',
     })
   }
 

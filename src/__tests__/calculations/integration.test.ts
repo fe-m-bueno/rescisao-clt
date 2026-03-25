@@ -20,11 +20,17 @@ const baseInput: CalculatorInput = {
   dependentes: 0,
 }
 
-function findVerba(result: ReturnType<typeof calcularRescisao>, partial: string) {
+function findVerba(
+  result: ReturnType<typeof calcularRescisao>,
+  partial: string,
+) {
   return result.verbas.find((v) => v.label.includes(partial))
 }
 
-function findDeducao(result: ReturnType<typeof calcularRescisao>, partial: string) {
+function findDeducao(
+  result: ReturnType<typeof calcularRescisao>,
+  partial: string,
+) {
   return result.deducoes.find((d) => d.label.includes(partial))
 }
 
@@ -48,7 +54,10 @@ describe('calcularRescisao - Integration', () => {
       expect(findVerba(result, 'Multa 40% FGTS')).toBeDefined()
 
       // Saldo de salario: (5000/30) * 25 = 4166.67
-      expect(findVerba(result, 'Saldo de salário')!.value).toBeCloseTo(4166.67, 1)
+      expect(findVerba(result, 'Saldo de salário')!.value).toBeCloseTo(
+        4166.67,
+        1,
+      )
 
       // Aviso previo: (5000/30) * 39 = 6500
       expect(findVerba(result, 'Aviso prévio')!.value).toBeCloseTo(6500, 0)
@@ -111,7 +120,10 @@ describe('calcularRescisao - Integration', () => {
 
       expect(findVerba(result, 'Férias vencidas')).toBeDefined()
       // 5000 + 5000/3 = 6666.67
-      expect(findVerba(result, 'Férias vencidas')!.value).toBeCloseTo(6666.67, 1)
+      expect(findVerba(result, 'Férias vencidas')!.value).toBeCloseTo(
+        6666.67,
+        1,
+      )
     })
   })
 
@@ -152,7 +164,10 @@ describe('calcularRescisao - Integration', () => {
       // Should have a deduction for aviso previo nao cumprido
       expect(findDeducao(result, 'Desconto aviso prévio')).toBeDefined()
       // 30 days: (5000/30) * 30 = 5000
-      expect(findDeducao(result, 'Desconto aviso prévio')!.value).toBeCloseTo(5000, 0)
+      expect(findDeducao(result, 'Desconto aviso prévio')!.value).toBeCloseTo(
+        5000,
+        0,
+      )
     })
   })
 
@@ -272,7 +287,10 @@ describe('calcularRescisao - Integration', () => {
       expect(result.duracaoAnos).toBe(0)
       expect(result.totalBruto).toBeGreaterThan(0)
       // Saldo: (5000/30) * 10 = 1666.67
-      expect(findVerba(result, 'Saldo de salário')!.value).toBeCloseTo(1666.67, 1)
+      expect(findVerba(result, 'Saldo de salário')!.value).toBeCloseTo(
+        1666.67,
+        1,
+      )
       // 0 complete years -> aviso previo = 30 days
       expect(result.avisoPrevioDias).toBe(30)
     })
@@ -355,7 +373,10 @@ describe('calcularRescisao - Integration', () => {
 
       // Base = 5000 + 500 + 300 = 5800
       // Saldo: (5800/30) * 25 = 4833.33
-      expect(findVerba(result, 'Saldo de salário')!.value).toBeCloseTo(4833.33, 1)
+      expect(findVerba(result, 'Saldo de salário')!.value).toBeCloseTo(
+        4833.33,
+        1,
+      )
     })
 
     it('aviso previo projection should affect 13th and vacation calculations', () => {
