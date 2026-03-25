@@ -63,16 +63,19 @@ export function Faq() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
-      <h2 className="mb-6 text-2xl font-bold tracking-tight">
-        Perguntas frequentes
-      </h2>
+      <div className="mb-8">
+        <h2 className="font-heading text-2xl font-extrabold tracking-tight">
+          Perguntas frequentes
+        </h2>
+        <div className="mt-2 h-0.5 w-12 rounded-full bg-primary" />
+      </div>
 
-      <div className="flex flex-col divide-y divide-border rounded-lg border">
+      <div className="flex flex-col divide-y divide-border/50 overflow-hidden rounded-2xl border border-border/50 bg-card/50">
         {FAQ_ITEMS.map((item) => (
-          <details key={item.question} className="group px-5 py-1">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-3 font-medium transition-colors hover:text-primary [&::-webkit-details-marker]:hidden">
+          <details key={item.question} className="group px-6 py-2">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-3 font-heading font-semibold transition-colors hover:text-primary [&::-webkit-details-marker]:hidden">
               <span>{item.question}</span>
-              <span className="shrink-0 text-muted-foreground transition-transform duration-200 group-open:rotate-180">
+              <span className="shrink-0 text-primary/60 transition-transform duration-200 group-open:rotate-180 group-open:text-primary">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
@@ -89,7 +92,7 @@ export function Faq() {
                 </svg>
               </span>
             </summary>
-            <p className="pb-4 text-sm leading-relaxed text-muted-foreground">
+            <p className="pb-5 text-sm leading-relaxed text-muted-foreground">
               {item.answer}
             </p>
           </details>

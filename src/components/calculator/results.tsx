@@ -84,7 +84,7 @@ export function Results({ result }: ResultsProps) {
   }, [])
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       <SummaryCard result={result} />
       <BreakdownTable result={result} />
 
@@ -94,7 +94,7 @@ export function Results({ result }: ResultsProps) {
       </div>
 
       {result.avisoPrevioDias > 0 && (
-        <Card>
+        <Card className="border-l-2 border-l-primary/30">
           <CardContent className="py-4">
             <p className="text-sm text-muted-foreground">
               <strong className="text-foreground">Aviso prévio:</strong>{' '}

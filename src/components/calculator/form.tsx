@@ -60,10 +60,12 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
   return (
     <Card className="no-print">
       <CardHeader>
-        <CardTitle>Dados do vínculo empregatício</CardTitle>
+        <CardTitle className="font-heading">
+          Dados do vínculo empregatício
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="salario">Salário bruto mensal</Label>
             <CurrencyInput
@@ -105,7 +107,7 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
           <div className="flex flex-col gap-1.5">
             <Label>Motivo do desligamento</Label>
             <Select
-              value={input.motivoDesligamento ?? undefined}
+              value={input.motivoDesligamento ?? null}
               onValueChange={(v) =>
                 setField('motivoDesligamento', v as TerminationType)
               }
@@ -123,9 +125,10 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
             </Select>
           </div>
 
-          <Collapsible defaultOpen={false} className="mt-2">
-            <CollapsibleTrigger className="flex w-full items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              <ChevronDown className="size-4 transition-transform [[data-panel-open]_&]:rotate-180" />
+          <div className="border-t border-border/50" />
+          <Collapsible defaultOpen={false} className="mt-0">
+            <CollapsibleTrigger className="flex w-full items-center gap-2 font-heading text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+              <ChevronDown className="size-4 text-primary/60 transition-transform [[data-panel-open]_&]:rotate-180" />
               Opções avançadas
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-4">

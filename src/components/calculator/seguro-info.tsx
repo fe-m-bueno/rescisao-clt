@@ -14,16 +14,14 @@ export function SeguroInfo({ seguroInfo }: SeguroInfoProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Seguro desemprego</CardTitle>
+        <CardTitle className="font-heading">Seguro desemprego</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-3 text-sm">
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Tem direito?</span>
             {seguroInfo.temDireito ? (
-              <Badge variant="default" className="bg-emerald-600 text-white">
-                Sim
-              </Badge>
+              <Badge variant="success">Sim</Badge>
             ) : (
               <Badge variant="destructive">Não</Badge>
             )}
@@ -43,7 +41,7 @@ export function SeguroInfo({ seguroInfo }: SeguroInfoProps) {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Valor total</span>
-                <span className="font-medium text-emerald-500">
+                <span className="font-medium text-primary font-mono">
                   {formatCurrency(seguroInfo.valorTotal)}
                 </span>
               </div>

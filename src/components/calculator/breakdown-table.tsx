@@ -22,7 +22,7 @@ export function BreakdownTable({ result }: BreakdownTableProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Detalhamento</CardTitle>
+        <CardTitle className="font-heading">Detalhamento</CardTitle>
       </CardHeader>
       <CardContent className="px-0 sm:px-4">
         <Table>
@@ -41,14 +41,14 @@ export function BreakdownTable({ result }: BreakdownTableProps) {
                     <TooltipExplainer description={item.description} />
                   </span>
                 </TableCell>
-                <TableCell className="text-right text-emerald-500 font-medium">
+                <TableCell className="text-right text-primary font-mono font-medium">
                   {formatCurrency(item.value)}
                 </TableCell>
               </TableRow>
             ))}
 
             {/* Subtotal bruto */}
-            <TableRow className="border-t-2">
+            <TableRow className="border-t-2 bg-muted/30">
               <TableCell className="font-semibold">Subtotal bruto</TableCell>
               <TableCell className="text-right font-semibold">
                 {formatCurrency(result.totalBruto)}
@@ -75,7 +75,7 @@ export function BreakdownTable({ result }: BreakdownTableProps) {
               <TableHead className="font-bold text-base">
                 Total líquido
               </TableHead>
-              <TableHead className="text-right font-bold text-base text-emerald-500">
+              <TableHead className="text-right font-bold text-base text-primary font-mono">
                 {formatCurrency(result.totalLiquido)}
               </TableHead>
             </TableRow>

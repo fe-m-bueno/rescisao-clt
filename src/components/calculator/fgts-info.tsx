@@ -13,7 +13,7 @@ export function FgtsInfo({ fgtsInfo }: FgtsInfoProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>FGTS</CardTitle>
+        <CardTitle className="font-heading">FGTS</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-3 text-sm">
@@ -27,9 +27,7 @@ export function FgtsInfo({ fgtsInfo }: FgtsInfoProps) {
           <div className="flex items-center justify-between">
             <span className="text-muted-foreground">Pode sacar?</span>
             {fgtsInfo.podeRetirar ? (
-              <Badge variant="default" className="bg-emerald-600 text-white">
-                Sim
-              </Badge>
+              <Badge variant="success">Sim</Badge>
             ) : (
               <Badge variant="destructive">Não</Badge>
             )}
@@ -47,7 +45,7 @@ export function FgtsInfo({ fgtsInfo }: FgtsInfoProps) {
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Valor do saque</span>
-                <span className="font-medium text-emerald-500">
+                <span className="font-medium text-primary font-mono">
                   {formatCurrency(fgtsInfo.valorRetirada)}
                 </span>
               </div>
@@ -59,7 +57,7 @@ export function FgtsInfo({ fgtsInfo }: FgtsInfoProps) {
               <span className="text-muted-foreground">
                 Multa {fgtsInfo.multaPercentual}%
               </span>
-              <span className="font-medium text-emerald-500">
+              <span className="font-medium text-primary font-mono">
                 {formatCurrency(fgtsInfo.multaValor)}
               </span>
             </div>
