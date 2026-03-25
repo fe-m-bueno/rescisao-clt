@@ -4,6 +4,7 @@ import { Faq } from '@/components/layout/faq'
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
 import { ThemeProvider } from '@/components/theme-provider'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import './globals.css'
 
 const geistSans = Geist({
@@ -54,10 +55,12 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <Header />
-          {children}
-          <Faq />
-          <Footer />
+          <TooltipProvider>
+            <Header />
+            {children}
+            <Faq />
+            <Footer />
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

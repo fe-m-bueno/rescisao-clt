@@ -18,3 +18,15 @@ export function formatCurrencyInput(value: number): string {
     maximumFractionDigits: 2,
   })
 }
+
+export function formatDuration(
+  anos: number,
+  meses: number,
+  dias: number,
+): string {
+  const parts: string[] = []
+  if (anos > 0) parts.push(`${anos} ano${anos !== 1 ? 's' : ''}`)
+  if (meses > 0) parts.push(`${meses} ${meses !== 1 ? 'meses' : 'mês'}`)
+  if (dias > 0) parts.push(`${dias} dia${dias !== 1 ? 's' : ''}`)
+  return parts.join(', ') || '0 dias'
+}

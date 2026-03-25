@@ -20,27 +20,13 @@ import {
 import { Switch } from '@/components/ui/switch'
 import type { Action } from '@/lib/calculator-reducer'
 import type { CalculatorInput } from '@/lib/types'
-import { AvisoPrevioType, TerminationType } from '@/lib/types'
+import {
+  AVISO_PREVIO_LABELS,
+  type AvisoPrevioType,
+  TERMINATION_LABELS,
+  type TerminationType,
+} from '@/lib/types'
 import { CurrencyInput } from './currency-input'
-
-const TERMINATION_LABELS: Record<TerminationType, string> = {
-  [TerminationType.SEM_JUSTA_CAUSA]: 'Demissão sem justa causa',
-  [TerminationType.COM_JUSTA_CAUSA]: 'Demissão com justa causa',
-  [TerminationType.PEDIDO_DEMISSAO]: 'Pedido de demissão',
-  [TerminationType.ACORDO_MUTUO]: 'Acordo mútuo',
-  [TerminationType.FIM_CONTRATO_EXPERIENCIA]:
-    'Término de contrato de experiência',
-  [TerminationType.RESCISAO_ANTECIPADA_EMPREGADOR]:
-    'Rescisão antecipada de experiência pelo empregador',
-  [TerminationType.RESCISAO_ANTECIPADA_EMPREGADO]:
-    'Rescisão antecipada de experiência pelo empregado',
-}
-
-const AVISO_PREVIO_LABELS: Record<AvisoPrevioType, string> = {
-  [AvisoPrevioType.TRABALHADO]: 'Trabalhado',
-  [AvisoPrevioType.INDENIZADO]: 'Indenizado',
-  [AvisoPrevioType.DISPENSADO]: 'Dispensado',
-}
 
 interface CalculatorFormProps {
   input: CalculatorInput
@@ -78,7 +64,6 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-4">
-          {/* Salario Bruto */}
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="salario">Salário bruto mensal</Label>
             <CurrencyInput
@@ -88,7 +73,6 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
             />
           </div>
 
-          {/* Data Admissao */}
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="admissao">Data de admissão</Label>
             <Input
@@ -101,7 +85,6 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
             />
           </div>
 
-          {/* Data Desligamento */}
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="desligamento">Data de desligamento</Label>
             <Input
@@ -119,7 +102,6 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
             )}
           </div>
 
-          {/* Motivo Desligamento */}
           <div className="flex flex-col gap-1.5">
             <Label>Motivo do desligamento</Label>
             <Select
@@ -141,7 +123,6 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
             </Select>
           </div>
 
-          {/* Advanced Section */}
           <Collapsible defaultOpen={false} className="mt-2">
             <CollapsibleTrigger className="flex w-full items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               <ChevronDown className="size-4 transition-transform [[data-panel-open]_&]:rotate-180" />
@@ -149,7 +130,6 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
             </CollapsibleTrigger>
             <CollapsibleContent className="mt-4">
               <div className="flex flex-col gap-4">
-                {/* Ferias vencidas toggle */}
                 <div className="flex items-center gap-3">
                   <Switch
                     checked={input.feriasVencidas}
@@ -159,7 +139,6 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
                   <Label htmlFor="ferias-vencidas">Férias vencidas?</Label>
                 </div>
 
-                {/* Meses ferias vencidas */}
                 {input.feriasVencidas && (
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor="meses-ferias">
@@ -181,7 +160,6 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
                   </div>
                 )}
 
-                {/* Media horas extras */}
                 <div className="flex flex-col gap-1.5">
                   <Label htmlFor="horas-extras">
                     Média de horas extras mensais
@@ -193,7 +171,6 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
                   />
                 </div>
 
-                {/* Outros adicionais */}
                 <div className="flex flex-col gap-1.5">
                   <Label htmlFor="adicionais">
                     Outros adicionais habituais
@@ -205,7 +182,6 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
                   />
                 </div>
 
-                {/* FGTS depositado */}
                 <div className="flex flex-col gap-1.5">
                   <Label htmlFor="fgts">FGTS depositado</Label>
                   <CurrencyInput
@@ -218,7 +194,6 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
                   />
                 </div>
 
-                {/* Aviso previo tipo */}
                 <div className="flex flex-col gap-1.5">
                   <Label>Tipo de aviso prévio</Label>
                   <Select
@@ -242,7 +217,6 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
                   </Select>
                 </div>
 
-                {/* Dependentes */}
                 <div className="flex flex-col gap-1.5">
                   <Label htmlFor="dependentes">Número de dependentes</Label>
                   <Input

@@ -28,26 +28,22 @@ import {
   roundCurrency,
 } from './utils'
 
-/** Termination types that entitle aviso previo indenizado */
-function temAvisoPrevioIndenizado(tipo: TerminationType): boolean {
-  return [
-    TerminationType.SEM_JUSTA_CAUSA,
-    TerminationType.ACORDO_MUTUO,
-    TerminationType.RESCISAO_ANTECIPADA_EMPREGADOR,
-  ].includes(tipo)
-}
+const TIPOS_AVISO_INDENIZADO = new Set([
+  TerminationType.SEM_JUSTA_CAUSA,
+  TerminationType.ACORDO_MUTUO,
+  TerminationType.RESCISAO_ANTECIPADA_EMPREGADOR,
+])
 
-/** Termination types that entitle 13th proportional */
-function temDecimoTerceiro(tipo: TerminationType): boolean {
-  return tipo !== TerminationType.COM_JUSTA_CAUSA
-}
+const TIPOS_SEGURO_DESEMPREGO = new Set([
+  TerminationType.SEM_JUSTA_CAUSA,
+  TerminationType.RESCISAO_ANTECIPADA_EMPREGADOR,
+])
 
-/** Termination types that entitle proportional vacation */
-function temFeriasProporcionais(tipo: TerminationType): boolean {
-  return tipo !== TerminationType.COM_JUSTA_CAUSA
-}
+const TIPOS_DESCONTO_AVISO = new Set([
+  TerminationType.PEDIDO_DEMISSAO,
+  TerminationType.RESCISAO_ANTECIPADA_EMPREGADO,
+])
 
-/** FGTS fine percentage by termination type */
 function multaFgtsPercentual(tipo: TerminationType): number {
   switch (tipo) {
     case TerminationType.SEM_JUSTA_CAUSA:
@@ -60,7 +56,6 @@ function multaFgtsPercentual(tipo: TerminationType): number {
   }
 }
 
-/** FGTS withdrawal percentage by termination type */
 function saqueFgtsPercentual(tipo: TerminationType): number {
   switch (tipo) {
     case TerminationType.SEM_JUSTA_CAUSA:
@@ -73,22 +68,6 @@ function saqueFgtsPercentual(tipo: TerminationType): number {
   }
 }
 
-/** Whether the termination type entitles seguro desemprego */
-function temSeguroDesemprego(tipo: TerminationType): boolean {
-  return [
-    TerminationType.SEM_JUSTA_CAUSA,
-    TerminationType.RESCISAO_ANTECIPADA_EMPREGADOR,
-  ].includes(tipo)
-}
-
-/** Whether the worker owes aviso previo (deduction) */
-function temDescontoAvisoPrevio(tipo: TerminationType): boolean {
-  return [
-    TerminationType.PEDIDO_DEMISSAO,
-    TerminationType.RESCISAO_ANTECIPADA_EMPREGADO,
-  ].includes(tipo)
-}
-
 /**
  * Main orchestrator: calculates all severance items for a given input.
  * Expects non-null required fields (dataAdmissao, dataDesligamento, motivoDesligamento).
@@ -97,11 +76,11 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
   const dataAdmissao = input.dataAdmissao as Date
   const dataDesligamento = input.dataDesligamento as Date
   const motivo = input.motivoDesligamento as TerminationType
+  const temDireito13Ferias = motivo !== TerminationType.COM_JUSTA_CAUSA
 
   const baseRemuneracao =
     input.salarioBruto + input.mediaHorasExtras + input.outrosAdicionais
 
-  // --- Duration ---
   const duracao = calcularDuracaoEmprego(dataAdmissao, dataDesligamento)
   const anosCompletos = calcularAnosCompletos(dataAdmissao, dataDesligamento)
   const mesesTrabalhados = calcularMesesTrabalhados(
@@ -109,12 +88,11 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
     dataDesligamento,
   )
 
-  // --- Aviso previo ---
   let avisoPrevioDias = 0
   let avisoValue = 0
   const avisoIsIndenizado = input.avisoPrevio === AvisoPrevioType.INDENIZADO
 
-  if (avisoIsIndenizado && temAvisoPrevioIndenizado(motivo)) {
+  if (avisoIsIndenizado && TIPOS_AVISO_INDENIZADO.has(motivo)) {
     avisoPrevioDias = calcularDiasAvisoPrevio(anosCompletos)
     avisoValue = calcularValorAvisoPrevio(baseRemuneracao, avisoPrevioDias)
     // Acordo mutuo: 50% do aviso previo
@@ -123,31 +101,28 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
     }
   }
 
-  // --- Projected end date for 13th and vacation calculations ---
-  // When aviso is indenizado and the worker receives it, the projected period extends
+  // Aviso indenizado projeta a data efetiva para calculo de 13o e ferias
   let dataEfetivaFim = dataDesligamento
-  if (avisoIsIndenizado && temAvisoPrevioIndenizado(motivo)) {
+  if (avisoIsIndenizado && TIPOS_AVISO_INDENIZADO.has(motivo)) {
     dataEfetivaFim = new Date(dataDesligamento)
     dataEfetivaFim.setDate(dataEfetivaFim.getDate() + avisoPrevioDias)
   }
 
-  // --- Saldo de salario ---
   const diasNoMes = calcularDiasNoMes(dataDesligamento)
   const saldoSalario = calcularSaldoSalario(baseRemuneracao, diasNoMes)
 
-  // --- 13o proporcional ---
   let decimoTerceiro = 0
-  if (temDecimoTerceiro(motivo)) {
-    const mesesNoAno = calcularMesesNoAnoParaDecimoTerceiro(
+  let mesesNoAno = 0
+  if (temDireito13Ferias) {
+    mesesNoAno = calcularMesesNoAnoParaDecimoTerceiro(
       dataAdmissao,
       dataEfetivaFim,
     )
     decimoTerceiro = calcularDecimoTerceiro(baseRemuneracao, mesesNoAno)
   }
 
-  // --- Ferias proporcionais ---
   let feriasProporcionais = 0
-  if (temFeriasProporcionais(motivo)) {
+  if (temDireito13Ferias) {
     const mesesAquisitivo = calcularMesesPeriodoAquisitivo(
       dataAdmissao,
       dataEfetivaFim,
@@ -158,14 +133,12 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
     )
   }
 
-  // --- Ferias vencidas ---
   let feriasVencidasValor = 0
   if (input.feriasVencidas && input.mesesFeriasVencidas > 0) {
     const emDobro = input.mesesFeriasVencidas > 12
     feriasVencidasValor = calcularFeriasVencidas(baseRemuneracao, emDobro)
   }
 
-  // --- FGTS ---
   const multaPercent = multaFgtsPercentual(motivo)
   const saquePercent = saqueFgtsPercentual(motivo)
   const saldoFgts =
@@ -183,9 +156,8 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
     multaValor: multaFgts,
   }
 
-  // --- Seguro desemprego ---
   let seguroInfo: SeguroDesempregoInfo
-  if (temSeguroDesemprego(motivo)) {
+  if (TIPOS_SEGURO_DESEMPREGO.has(motivo)) {
     const parcelas = calcularParcelas(mesesTrabalhados)
     const valorParcela = calcularValorParcela(input.salarioBruto)
     seguroInfo = {
@@ -203,7 +175,6 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
     }
   }
 
-  // --- Build verbas ---
   const verbas: LineItem[] = []
 
   verbas.push({
@@ -222,10 +193,6 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
   }
 
   if (decimoTerceiro > 0) {
-    const mesesNoAno = calcularMesesNoAnoParaDecimoTerceiro(
-      dataAdmissao,
-      dataEfetivaFim,
-    )
     verbas.push({
       label: `13º salário proporcional (${mesesNoAno}/12)`,
       value: decimoTerceiro,
@@ -260,10 +227,8 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
     })
   }
 
-  // --- Deductions ---
   const deducoes: LineItem[] = []
 
-  // INSS on saldo de salario only
   const inssValor = calcularInss(saldoSalario)
   if (inssValor > 0) {
     deducoes.push({
@@ -273,7 +238,7 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
     })
   }
 
-  // IRRF on taxable items (saldo + aviso + 13o). Ferias are exempt.
+  // Ferias sao isentas de IRRF
   const baseTributavel = saldoSalario + avisoValue + decimoTerceiro - inssValor
   const irrfValor = calcularIrrf(
     baseTributavel,
@@ -289,8 +254,7 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
     })
   }
 
-  // Aviso previo discount (employee resignation with indenizado)
-  if (avisoIsIndenizado && temDescontoAvisoPrevio(motivo)) {
+  if (avisoIsIndenizado && TIPOS_DESCONTO_AVISO.has(motivo)) {
     const descontoAviso = calcularValorAvisoPrevio(baseRemuneracao, 30)
     deducoes.push({
       label: 'Desconto aviso prévio não cumprido (30 dias)',
@@ -300,7 +264,6 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
     })
   }
 
-  // --- Totals ---
   const totalBruto = roundCurrency(
     verbas.reduce((sum, item) => sum + item.value, 0),
   )

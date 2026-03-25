@@ -4,9 +4,8 @@ import { ClipboardCopy, Printer } from 'lucide-react'
 import { useCallback, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { formatCurrency } from '@/lib/formatter'
-import type { CalculationResult, CalculatorInput } from '@/lib/types'
-import { TerminationType } from '@/lib/types'
+import { formatCurrency, formatDuration } from '@/lib/formatter'
+import { type CalculationResult, TERMINATION_LABELS } from '@/lib/types'
 import { BreakdownTable } from './breakdown-table'
 import { FgtsInfo } from './fgts-info'
 import { SeguroInfo } from './seguro-info'
@@ -14,27 +13,6 @@ import { SummaryCard } from './summary-card'
 
 interface ResultsProps {
   result: CalculationResult
-  input: CalculatorInput
-}
-
-const TERMINATION_LABELS: Record<TerminationType, string> = {
-  [TerminationType.SEM_JUSTA_CAUSA]: 'Demissão sem justa causa',
-  [TerminationType.COM_JUSTA_CAUSA]: 'Demissão com justa causa',
-  [TerminationType.PEDIDO_DEMISSAO]: 'Pedido de demissão',
-  [TerminationType.ACORDO_MUTUO]: 'Acordo mútuo',
-  [TerminationType.FIM_CONTRATO_EXPERIENCIA]: 'Fim de contrato de experiência',
-  [TerminationType.RESCISAO_ANTECIPADA_EMPREGADOR]:
-    'Rescisão antecipada pelo empregador',
-  [TerminationType.RESCISAO_ANTECIPADA_EMPREGADO]:
-    'Rescisão antecipada pelo empregado',
-}
-
-function formatDuration(anos: number, meses: number, dias: number): string {
-  const parts: string[] = []
-  if (anos > 0) parts.push(`${anos} ano${anos !== 1 ? 's' : ''}`)
-  if (meses > 0) parts.push(`${meses} ${meses !== 1 ? 'meses' : 'mês'}`)
-  if (dias > 0) parts.push(`${dias} dia${dias !== 1 ? 's' : ''}`)
-  return parts.join(', ') || '0 dias'
 }
 
 function buildTextResult(result: CalculationResult): string {
@@ -90,7 +68,7 @@ function buildTextResult(result: CalculationResult): string {
   return lines.join('\n')
 }
 
-export function Results({ result, input: _input }: ResultsProps) {
+export function Results({ result }: ResultsProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = useCallback(() => {
@@ -115,7 +93,6 @@ export function Results({ result, input: _input }: ResultsProps) {
         <SeguroInfo seguroInfo={result.seguroInfo} />
       </div>
 
-      {/* Aviso previo info */}
       {result.avisoPrevioDias > 0 && (
         <Card>
           <CardContent className="py-4">
@@ -128,7 +105,6 @@ export function Results({ result, input: _input }: ResultsProps) {
         </Card>
       )}
 
-      {/* Action buttons */}
       <div className="no-print flex gap-3">
         <Button variant="outline" size="default" onClick={handleCopy}>
           <ClipboardCopy className="size-4" />

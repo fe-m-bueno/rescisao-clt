@@ -8,4 +8,3 @@ export const SEGURO_FAIXA_2_MULT = 0.5
 
 export const SEGURO_VALOR_FIXO = 2518.65
 export const SEGURO_MINIMO = 1621.0
-export const SEGURO_MAXIMO = 2518.65

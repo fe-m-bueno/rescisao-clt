@@ -76,3 +76,22 @@ export interface IrrfFaixa {
   aliquota: number
   deducao: number
 }
+
+export const TERMINATION_LABELS: Record<TerminationType, string> = {
+  [TerminationType.SEM_JUSTA_CAUSA]: 'Demissão sem justa causa',
+  [TerminationType.COM_JUSTA_CAUSA]: 'Demissão com justa causa',
+  [TerminationType.PEDIDO_DEMISSAO]: 'Pedido de demissão',
+  [TerminationType.ACORDO_MUTUO]: 'Acordo mútuo',
+  [TerminationType.FIM_CONTRATO_EXPERIENCIA]:
+    'Término de contrato de experiência',
+  [TerminationType.RESCISAO_ANTECIPADA_EMPREGADOR]:
+    'Rescisão antecipada de experiência pelo empregador',
+  [TerminationType.RESCISAO_ANTECIPADA_EMPREGADO]:
+    'Rescisão antecipada de experiência pelo empregado',
+}
+
+export const AVISO_PREVIO_LABELS: Record<AvisoPrevioType, string> = {
+  [AvisoPrevioType.TRABALHADO]: 'Trabalhado',
+  [AvisoPrevioType.INDENIZADO]: 'Indenizado',
+  [AvisoPrevioType.DISPENSADO]: 'Dispensado',
+}

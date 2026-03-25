@@ -4,7 +4,6 @@ import { HelpCircle } from 'lucide-react'
 import {
   Tooltip,
   TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 
@@ -14,18 +13,16 @@ interface TooltipExplainerProps {
 
 export function TooltipExplainer({ description }: TooltipExplainerProps) {
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger
-          className="inline-flex cursor-help text-muted-foreground hover:text-foreground"
-          aria-label="Mais informações"
-        >
-          <HelpCircle className="size-3.5" />
-        </TooltipTrigger>
-        <TooltipContent side="top" className="max-w-xs">
-          <p>{description}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger
+        className="inline-flex cursor-help text-muted-foreground hover:text-foreground"
+        aria-label="Mais informações"
+      >
+        <HelpCircle className="size-3.5" />
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-xs">
+        <p>{description}</p>
+      </TooltipContent>
+    </Tooltip>
   )
 }

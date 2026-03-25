@@ -26,7 +26,7 @@ export default function Home() {
     <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
         <CalculatorForm input={input} dispatch={dispatch} />
-        {result && <Results result={result} input={input} />}
+        {result && <Results result={result} />}
       </div>
     </main>
   )

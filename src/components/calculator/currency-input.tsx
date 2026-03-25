@@ -1,6 +1,6 @@
 'use client'
 
-import { type ChangeEvent, useCallback, useRef } from 'react'
+import { type ChangeEvent, useCallback } from 'react'
 import { Input } from '@/components/ui/input'
 import { formatCurrencyInput, parseCurrencyInput } from '@/lib/formatter'
 
@@ -17,8 +17,6 @@ export function CurrencyInput({
   placeholder,
   id,
 }: CurrencyInputProps) {
-  const inputRef = useRef<HTMLInputElement>(null)
-
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const raw = e.target.value
@@ -34,7 +32,6 @@ export function CurrencyInput({
         R$
       </span>
       <Input
-        ref={inputRef}
         id={id}
         type="text"
         inputMode="decimal"
