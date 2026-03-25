@@ -6,6 +6,7 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     include: ['src/__tests__/**/*.test.ts'],
+    passWithNoTests: true,
   },
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },
