@@ -1,30 +1,15 @@
 # Rescisão CLT — Calculadora de Rescisão Trabalhista
 
-A aplicação web mais precisa e amigável do Brasil para calcular exatamente quanto um trabalhador tem direito a receber ao sair de um emprego. Construída com a legislação CLT + Reforma Trabalhista 2017 em mente, com tabelas fiscais atualizadas para 2026.
-
-**Acesso:** [rescisao-clt.vercel.app](https://rescisao-clt.vercel.app)
+Calculadora web de rescisão trabalhista e salário líquido, construída com Next.js, TypeScript e TailwindCSS. Segue a legislação CLT + Reforma Trabalhista 2017, com tabelas fiscais de 2026. Motor de cálculos com funções puras e testadas, UI responsiva com dark/light mode, e arquitetura separando lógica de negócio da apresentação.
 
 ## Visão Geral
 
-O **Rescisão CLT** é uma calculadora de rescisão trabalhista que oferece:
-
-- **Cálculo preciso e transparente**: Detalha cada verba a que o trabalhador tem direito conforme o tipo de desligamento
-- **Suporte a 7 tipos de desligamento**: desde demissão sem causa até rescisão antecipada de contrato de experiência
-- **Duas calculadoras integradas**: rescisão trabalhista + salário líquido mensal
-- **Tabelas fiscais atualizadas**: INSS, IRRF e Seguro Desemprego 2026
-- **Experiência móvel otimizada**: funciona perfeitamente em qualquer dispositivo
-- **Modo claro/escuro**: tema adaptável à preferência do usuário
-- **Sem login, sem ads**: ferramenta focada e acessível para todos
-
-### Por que existe
-
-Todo trabalhador CLT enfrenta rescisão pelo menos uma vez na vida. As ferramentas existentes são:
-- Feias e desatualizadas
-- Imprecisas ou simplificadas demais
-- Cheias de publicidades
-- Sem transparência nos cálculos
-
-Rescisão CLT resolve isso: exatidão legal, design moderno, totalmente transparente.
+- Calculadora de rescisão com suporte a 7 tipos de desligamento
+- Calculadora de salário líquido com deduções detalhadas
+- Tabelas progressivas de INSS, IRRF (com Lei 15.270/2025) e Seguro Desemprego 2026
+- Cálculos em tempo real, sem submit
+- Responsivo, dark/light mode, copiar/imprimir resultados
+- FAQ estruturada com JSON-LD para SEO
 
 ---
 
