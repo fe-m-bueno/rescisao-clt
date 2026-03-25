@@ -17,7 +17,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Calculadora de Rescisão CLT 2026 - Calcule seus direitos trabalhistas',
+  title:
+    'Calculadora de Rescisão CLT 2026 - Calcule seus direitos trabalhistas',
   description:
     'Calcule grátis o valor da sua rescisão CLT. Demissão sem justa causa, pedido de demissão, acordo mútuo e mais. Atualizado com tabelas INSS e IRRF 2026.',
   keywords: [

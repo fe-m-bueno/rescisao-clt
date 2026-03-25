@@ -54,13 +54,13 @@ describe('calcularRescisao - Integration', () => {
       expect(findVerba(result, 'Multa 40% FGTS')).toBeDefined()
 
       // Saldo de salario: (5000/30) * 25 = 4166.67
-      expect(findVerba(result, 'Saldo de salário')!.value).toBeCloseTo(
+      expect(findVerba(result, 'Saldo de salário')?.value).toBeCloseTo(
         4166.67,
         1,
       )
 
       // Aviso previo: (5000/30) * 39 = 6500
-      expect(findVerba(result, 'Aviso prévio')!.value).toBeCloseTo(6500, 0)
+      expect(findVerba(result, 'Aviso prévio')?.value).toBeCloseTo(6500, 0)
 
       // FGTS multa 40%
       expect(result.fgtsInfo.multaPercentual).toBe(40)
@@ -120,7 +120,7 @@ describe('calcularRescisao - Integration', () => {
 
       expect(findVerba(result, 'Férias vencidas')).toBeDefined()
       // 5000 + 5000/3 = 6666.67
-      expect(findVerba(result, 'Férias vencidas')!.value).toBeCloseTo(
+      expect(findVerba(result, 'Férias vencidas')?.value).toBeCloseTo(
         6666.67,
         1,
       )
@@ -164,7 +164,7 @@ describe('calcularRescisao - Integration', () => {
       // Should have a deduction for aviso previo nao cumprido
       expect(findDeducao(result, 'Desconto aviso prévio')).toBeDefined()
       // 30 days: (5000/30) * 30 = 5000
-      expect(findDeducao(result, 'Desconto aviso prévio')!.value).toBeCloseTo(
+      expect(findDeducao(result, 'Desconto aviso prévio')?.value).toBeCloseTo(
         5000,
         0,
       )
@@ -187,7 +187,7 @@ describe('calcularRescisao - Integration', () => {
       // Aviso previo at 50%: (5000/30) * 39 * 0.5 = 3250
       const aviso = findVerba(result, 'Aviso prévio')
       expect(aviso).toBeDefined()
-      expect(aviso!.value).toBeCloseTo(3250, 0)
+      expect(aviso?.value).toBeCloseTo(3250, 0)
 
       // FGTS 20%
       expect(result.fgtsInfo.multaPercentual).toBe(20)
@@ -239,7 +239,7 @@ describe('calcularRescisao - Integration', () => {
       expect(findVerba(result, 'Férias proporcionais')).toBeDefined()
 
       // Full aviso: (5000/30) * 39 = 6500
-      expect(findVerba(result, 'Aviso prévio')!.value).toBeCloseTo(6500, 0)
+      expect(findVerba(result, 'Aviso prévio')?.value).toBeCloseTo(6500, 0)
 
       expect(result.fgtsInfo.multaPercentual).toBe(40)
       expect(result.fgtsInfo.podeRetirar).toBe(true)
@@ -287,7 +287,7 @@ describe('calcularRescisao - Integration', () => {
       expect(result.duracaoAnos).toBe(0)
       expect(result.totalBruto).toBeGreaterThan(0)
       // Saldo: (5000/30) * 10 = 1666.67
-      expect(findVerba(result, 'Saldo de salário')!.value).toBeCloseTo(
+      expect(findVerba(result, 'Saldo de salário')?.value).toBeCloseTo(
         1666.67,
         1,
       )
@@ -322,7 +322,7 @@ describe('calcularRescisao - Integration', () => {
       expect(inss).toBeDefined()
       // Saldo = (20000/30)*25 = 16666.67; INSS on that is capped at INSS_TETO contribution
       // The INSS contribution on 16666.67 should be the max bracket contribution
-      expect(inss!.value).toBeGreaterThan(0)
+      expect(inss?.value).toBeGreaterThan(0)
     })
 
     it('30+ years worked should cap aviso previo at 90 days', () => {
@@ -348,7 +348,7 @@ describe('calcularRescisao - Integration', () => {
       const feriasVencidas = findVerba(result, 'Férias vencidas')
       expect(feriasVencidas).toBeDefined()
       // Em dobro: (5000 + 5000/3) * 2 = 13333.33
-      expect(feriasVencidas!.value).toBeCloseTo(13333.33, 1)
+      expect(feriasVencidas?.value).toBeCloseTo(13333.33, 1)
     })
 
     it('should use provided FGTS balance instead of estimating', () => {
@@ -373,7 +373,7 @@ describe('calcularRescisao - Integration', () => {
 
       // Base = 5000 + 500 + 300 = 5800
       // Saldo: (5800/30) * 25 = 4833.33
-      expect(findVerba(result, 'Saldo de salário')!.value).toBeCloseTo(
+      expect(findVerba(result, 'Saldo de salário')?.value).toBeCloseTo(
         4833.33,
         1,
       )
@@ -394,7 +394,7 @@ describe('calcularRescisao - Integration', () => {
       const decimo = findVerba(result, '13º salário')
       expect(decimo).toBeDefined()
       // (5000/12) * 3 = 1250
-      expect(decimo!.value).toBeCloseTo(1250, 0)
+      expect(decimo?.value).toBeCloseTo(1250, 0)
     })
   })
 })
