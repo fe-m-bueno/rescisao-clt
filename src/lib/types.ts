@@ -26,6 +26,7 @@ export interface CalculatorInput {
   fgtsDepositado: number | null
   avisoPrevio: AvisoPrevioType
   dependentes: number
+  duracaoContratoExperiencia: number
 }
 
 export interface LineItem {

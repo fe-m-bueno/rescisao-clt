@@ -147,6 +147,7 @@ rescisao-clt/
 │   │   │   ├── decimo-terceiro.ts  # Cálculo de 13º proporcional
 │   │   │   ├── ferias.ts           # Cálculo de férias
 │   │   │   ├── fgts.ts             # Cálculo e estimativa de FGTS
+│   │   │   ├── contrato-experiencia.ts # Indenização Art. 479/480 CLT
 │   │   │   ├── seguro-desemprego.ts # Cálculo de seguro-desemprego
 │   │   │   ├── inss.ts             # Cálculo de INSS (tabela progressiva)
 │   │   │   ├── irrf.ts             # Cálculo de IRRF (com Lei 15.270/2025)
@@ -172,6 +173,7 @@ rescisao-clt/
 │           ├── decimo-terceiro.test.ts
 │           ├── ferias.test.ts
 │           ├── fgts.test.ts
+│           ├── contrato-experiencia.test.ts
 │           ├── inss.test.ts
 │           ├── irrf.test.ts
 │           ├── seguro-desemprego.test.ts
@@ -280,11 +282,11 @@ A aplicação suporta 7 tipos de desligamento, cada um com regras específicas:
 - ✅ 13º proporcional
 - ✅ Férias proporcionais + 1/3
 - ✅ Férias vencidas + 1/3 (se houver)
+- ✅ Saque do FGTS (100%)
 
 **Não tem direito:**
 - ❌ Aviso prévio
 - ❌ Multa FGTS
-- ❌ Saque FGTS
 - ❌ Seguro desemprego
 
 #### 6. Rescisão antecipada de experiência pelo empregador
@@ -299,6 +301,7 @@ A aplicação suporta 7 tipos de desligamento, cada um com regras específicas:
 - ✅ Multa 40% do FGTS
 - ✅ Saque do FGTS (100%)
 - ✅ Seguro desemprego
+- ✅ Indenização Art. 479 CLT (metade da remuneração dos dias restantes do contrato)
 
 #### 7. Rescisão antecipada de experiência pelo empregado
 **Quando:** Funcionário pede para sair durante período de experiência.
@@ -315,8 +318,9 @@ A aplicação suporta 7 tipos de desligamento, cada um com regras específicas:
 - ❌ Saque FGTS
 - ❌ Seguro desemprego
 
-**Desconto:**
+**Deduções:**
 - Desconto de 30 dias de aviso prévio não cumprido
+- Indenização Art. 480 CLT (metade da remuneração dos dias restantes do contrato)
 
 ### Funções de Cálculo
 
@@ -502,6 +506,7 @@ multa = saldoFgts × percentual
 **Saque autorizado:**
 - **Demissão sem causa**: 100%
 - **Rescisão antecipada por empregador**: 100%
+- **Término de contrato de experiência**: 100%
 - **Acordo mútuo**: 80%
 - **Demais casos**: 0%
 
@@ -583,7 +588,7 @@ O IRRF (Imposto de Renda Retido na Fonte) é calculado em 5 passos:
    Faixa 2: até R$ 2.826,65                  → 7,5% (desc R$ 182,16)
    Faixa 3: até R$ 3.751,05                  → 15% (desc R$ 394,16)
    Faixa 4: até R$ 4.664,68                  → 22,5% (desc R$ 675,49)
-   Faixa 5: acima de R$ 4.664,68             → 27,5% (desc R$ 896,00)
+   Faixa 5: acima de R$ 4.664,68             → 27,5% (desc R$ 908,73)
    ```
 
    ```

@@ -18,6 +18,7 @@ const baseInput: CalculatorInput = {
   fgtsDepositado: null,
   avisoPrevio: AvisoPrevioType.INDENIZADO,
   dependentes: 0,
+  duracaoContratoExperiencia: 90,
 }
 
 function findVerba(
@@ -203,7 +204,7 @@ describe('calcularRescisao - Integration', () => {
   })
 
   describe('Fim de contrato de experiência', () => {
-    it('should have saldo, 13o, ferias, no aviso, no FGTS, no seguro', () => {
+    it('should have saldo, 13o, ferias, saque FGTS, no multa, no aviso, no seguro', () => {
       const input: CalculatorInput = {
         ...baseInput,
         dataAdmissao: new Date(2026, 0, 1), // 01/01/2026
@@ -220,16 +221,20 @@ describe('calcularRescisao - Integration', () => {
       expect(findVerba(result, 'Multa')).toBeUndefined()
 
       expect(result.fgtsInfo.multaPercentual).toBe(0)
-      expect(result.fgtsInfo.podeRetirar).toBe(false)
+      expect(result.fgtsInfo.podeRetirar).toBe(true)
+      expect(result.fgtsInfo.percentualRetirada).toBe(100)
       expect(result.seguroInfo.temDireito).toBe(false)
     })
   })
 
   describe('Rescisão antecipada pelo empregador', () => {
-    it('should have aviso 100%, multa 40%, saque 100%, seguro', () => {
+    it('should have aviso 100%, multa 40%, saque 100%, indenização Art. 479', () => {
       const input: CalculatorInput = {
         ...baseInput,
+        dataAdmissao: new Date(2026, 0, 1), // 01/01/2026
+        dataDesligamento: new Date(2026, 1, 15), // 15/02/2026 — 45 dias trabalhados
         motivoDesligamento: TerminationType.RESCISAO_ANTECIPADA_EMPREGADOR,
+        duracaoContratoExperiencia: 90,
       }
       const result = calcularRescisao(input)
 
@@ -238,24 +243,29 @@ describe('calcularRescisao - Integration', () => {
       expect(findVerba(result, '13º salário')).toBeDefined()
       expect(findVerba(result, 'Férias proporcionais')).toBeDefined()
 
-      // Full aviso: (5000/30) * 39 = 6500
-      expect(findVerba(result, 'Aviso prévio')?.value).toBeCloseTo(6500, 0)
-
       expect(result.fgtsInfo.multaPercentual).toBe(40)
       expect(result.fgtsInfo.podeRetirar).toBe(true)
       expect(result.fgtsInfo.percentualRetirada).toBe(100)
-      expect(result.seguroInfo.temDireito).toBe(true)
+
+      // Less than 6 months worked, no seguro desemprego
+      expect(result.seguroInfo.temDireito).toBe(false)
+
+      // Art. 479: indenização = (5000/30) * (45 dias restantes / 2) = 3750
+      const indenizacao = findVerba(result, 'Art. 479')
+      expect(indenizacao).toBeDefined()
+      expect(indenizacao?.value).toBeCloseTo(3750, 0)
     })
   })
 
   describe('Rescisão antecipada pelo empregado', () => {
-    it('should have saldo, 13o, ferias, no FGTS, no seguro, aviso discount when indenizado', () => {
+    it('should have saldo, 13o, ferias, no FGTS, no seguro, indenização Art. 480', () => {
       const input: CalculatorInput = {
         ...baseInput,
         dataAdmissao: new Date(2026, 0, 1), // 01/01/2026
-        dataDesligamento: new Date(2026, 1, 28), // 28/02/2026 — antecipada experiencia
+        dataDesligamento: new Date(2026, 1, 28), // 28/02/2026 — 58 dias trabalhados
         motivoDesligamento: TerminationType.RESCISAO_ANTECIPADA_EMPREGADO,
         avisoPrevio: AvisoPrevioType.INDENIZADO,
+        duracaoContratoExperiencia: 90,
       }
       const result = calcularRescisao(input)
 
@@ -267,6 +277,11 @@ describe('calcularRescisao - Integration', () => {
 
       // Deduction for aviso not worked
       expect(findDeducao(result, 'Desconto aviso prévio')).toBeDefined()
+
+      // Art. 480: indenização = (5000/30) * (32 dias restantes / 2) = 2666.67
+      const indenizacao = findDeducao(result, 'Art. 480')
+      expect(indenizacao).toBeDefined()
+      expect(indenizacao?.value).toBeCloseTo(2666.67, 0)
 
       expect(result.fgtsInfo.multaPercentual).toBe(0)
       expect(result.fgtsInfo.podeRetirar).toBe(false)

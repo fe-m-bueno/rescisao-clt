@@ -24,7 +24,7 @@ import {
   AVISO_PREVIO_LABELS,
   type AvisoPrevioType,
   TERMINATION_LABELS,
-  type TerminationType,
+  TerminationType,
 } from '@/lib/types'
 import { CurrencyInput } from './currency-input'
 import { DateInput } from './date-input'
@@ -110,6 +110,35 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
               </SelectContent>
             </Select>
           </div>
+
+          {input.motivoDesligamento &&
+            [
+              TerminationType.FIM_CONTRATO_EXPERIENCIA,
+              TerminationType.RESCISAO_ANTECIPADA_EMPREGADOR,
+              TerminationType.RESCISAO_ANTECIPADA_EMPREGADO,
+            ].includes(input.motivoDesligamento) && (
+              <div className="flex flex-col gap-1.5">
+                <Label>Duração do contrato de experiência</Label>
+                <Select
+                  value={String(input.duracaoContratoExperiencia)}
+                  onValueChange={(v) =>
+                    setField('duracaoContratoExperiencia', Number(v))
+                  }
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue>
+                      {input.duracaoContratoExperiencia} dias
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="30">30 dias</SelectItem>
+                    <SelectItem value="45">45 dias</SelectItem>
+                    <SelectItem value="60">60 dias</SelectItem>
+                    <SelectItem value="90">90 dias</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
           <div className="border-t border-border/50" />
           <Collapsible defaultOpen={false} className="mt-0">

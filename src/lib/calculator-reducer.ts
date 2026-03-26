@@ -13,6 +13,7 @@ export const defaultInput: CalculatorInput = {
   fgtsDepositado: null,
   avisoPrevio: AvisoPrevioType.INDENIZADO,
   dependentes: 0,
+  duracaoContratoExperiencia: 90,
 }
 
 export type Action =

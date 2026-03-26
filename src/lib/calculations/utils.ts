@@ -134,6 +134,14 @@ export function calcularMesesPeriodoAquisitivo(
   return calcularMesesTrabalhados(ultimoAniversario, dataDesligamento)
 }
 
+/**
+ * Calculates calendar days between two dates (inclusive of start, exclusive of end).
+ */
+export function calcularDiasCorridos(inicio: Date, fim: Date): number {
+  const diffMs = fim.getTime() - inicio.getTime()
+  return Math.max(0, Math.round(diffMs / (1000 * 60 * 60 * 24)))
+}
+
 /** Helper: get number of days in a specific month */
 function daysInMonth(year: number, month: number): number {
   return new Date(year, month + 1, 0).getDate()

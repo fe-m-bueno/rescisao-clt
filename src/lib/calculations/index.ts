@@ -16,10 +16,12 @@ import { calcularFeriasProporcionais, calcularFeriasVencidas } from './ferias'
 import { calcularMultaFgts, estimarSaldoFgts } from './fgts'
 import { calcularInss } from './inss'
 import { calcularIrrf } from './irrf'
+import { calcularIndenizacaoContratoExperiencia } from './contrato-experiencia'
 import { calcularSaldoSalario } from './saldo-salario'
 import { calcularParcelas, calcularValorParcela } from './seguro-desemprego'
 import {
   calcularAnosCompletos,
+  calcularDiasCorridos,
   calcularDiasNoMes,
   calcularDuracaoEmprego,
   calcularMesesNoAnoParaDecimoTerceiro,
@@ -60,6 +62,7 @@ function saqueFgtsPercentual(tipo: TerminationType): number {
   switch (tipo) {
     case TerminationType.SEM_JUSTA_CAUSA:
     case TerminationType.RESCISAO_ANTECIPADA_EMPREGADOR:
+    case TerminationType.FIM_CONTRATO_EXPERIENCIA:
       return 1.0
     case TerminationType.ACORDO_MUTUO:
       return 0.8
@@ -227,6 +230,24 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
     })
   }
 
+  // Art. 479 CLT: indenização por rescisão antecipada pelo empregador
+  if (motivo === TerminationType.RESCISAO_ANTECIPADA_EMPREGADOR) {
+    const diasTrabalhados = calcularDiasCorridos(dataAdmissao, dataDesligamento)
+    const indenizacao479 = calcularIndenizacaoContratoExperiencia(
+      baseRemuneracao,
+      input.duracaoContratoExperiencia,
+      diasTrabalhados,
+    )
+    if (indenizacao479 > 0) {
+      verbas.push({
+        label: 'Indenização Art. 479 CLT',
+        value: indenizacao479,
+        description:
+          'Indenização por rescisão antecipada do contrato de experiência pelo empregador, equivalente à metade da remuneração dos dias restantes do contrato.',
+      })
+    }
+  }
+
   const deducoes: LineItem[] = []
 
   const inssValor = calcularInss(saldoSalario)
@@ -262,6 +283,24 @@ export function calcularRescisao(input: CalculatorInput): CalculationResult {
       description:
         'Desconto referente ao aviso prévio que o empregado não cumpriu.',
     })
+  }
+
+  // Art. 480 CLT: indenização por rescisão antecipada pelo empregado
+  if (motivo === TerminationType.RESCISAO_ANTECIPADA_EMPREGADO) {
+    const diasTrabalhados = calcularDiasCorridos(dataAdmissao, dataDesligamento)
+    const indenizacao480 = calcularIndenizacaoContratoExperiencia(
+      baseRemuneracao,
+      input.duracaoContratoExperiencia,
+      diasTrabalhados,
+    )
+    if (indenizacao480 > 0) {
+      deducoes.push({
+        label: 'Indenização Art. 480 CLT',
+        value: indenizacao480,
+        description:
+          'Indenização devida pelo empregado por rescisão antecipada do contrato de experiência, limitada à metade da remuneração dos dias restantes do contrato.',
+      })
+    }
   }
 
   const totalBruto = roundCurrency(

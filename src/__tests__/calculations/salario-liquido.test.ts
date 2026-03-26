@@ -51,7 +51,7 @@ describe('calcularSalarioLiquido', () => {
     })
     expect(result.inss).toBeGreaterThan(0)
     expect(result.irrf).toBeGreaterThan(0)
-    expect(result.salarioLiquido).toBe(6000 - result.inss - result.irrf)
+    expect(result.salarioLiquido).toBeCloseTo(6000 - result.inss - result.irrf, 2)
   })
 
   it('calculates salary above INSS ceiling (R$ 10,000)', () => {

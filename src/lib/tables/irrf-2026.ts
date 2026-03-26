@@ -5,7 +5,7 @@ export const IRRF_FAIXAS: IrrfFaixa[] = [
   { teto: 2826.65, aliquota: 0.075, deducao: 182.16 },
   { teto: 3751.05, aliquota: 0.15, deducao: 394.16 },
   { teto: 4664.68, aliquota: 0.225, deducao: 675.49 },
-  { teto: Infinity, aliquota: 0.275, deducao: 896.0 },
+  { teto: Infinity, aliquota: 0.275, deducao: 908.73 },
 ]
 
 export const DEDUCAO_POR_DEPENDENTE = 189.59
