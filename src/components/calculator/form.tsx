@@ -1,7 +1,7 @@
 'use client'
 
 import { ChevronDown } from 'lucide-react'
-import type { Dispatch } from 'react'
+import { type Dispatch, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Collapsible,
@@ -27,30 +27,20 @@ import {
   type TerminationType,
 } from '@/lib/types'
 import { CurrencyInput } from './currency-input'
+import { DateInput } from './date-input'
 
 interface CalculatorFormProps {
   input: CalculatorInput
   dispatch: Dispatch<Action>
 }
 
-function formatDateForInput(date: Date | null): string {
-  if (!date) return ''
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, '0')
-  const d = String(date.getDate()).padStart(2, '0')
-  return `${y}-${m}-${d}`
-}
-
-function parseDateInput(value: string): Date | null {
-  if (!value) return null
-  const [y, m, d] = value.split('-').map(Number)
-  return new Date(y, m - 1, d)
-}
-
 export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
-  const setField = (field: keyof CalculatorInput, value: unknown) => {
-    dispatch({ type: 'SET_FIELD', field, value })
-  }
+  const setField = useCallback(
+    (field: keyof CalculatorInput, value: unknown) => {
+      dispatch({ type: 'SET_FIELD', field, value })
+    },
+    [dispatch],
+  )
 
   const dateError =
     input.dataAdmissao &&
@@ -77,25 +67,19 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
 
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="admissao">Data de admissão</Label>
-            <Input
+            <DateInput
               id="admissao"
-              type="date"
-              value={formatDateForInput(input.dataAdmissao)}
-              onChange={(e) =>
-                setField('dataAdmissao', parseDateInput(e.target.value))
-              }
+              value={input.dataAdmissao}
+              onChange={(d) => setField('dataAdmissao', d)}
             />
           </div>
 
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="desligamento">Data de desligamento</Label>
-            <Input
+            <DateInput
               id="desligamento"
-              type="date"
-              value={formatDateForInput(input.dataDesligamento)}
-              onChange={(e) =>
-                setField('dataDesligamento', parseDateInput(e.target.value))
-              }
+              value={input.dataDesligamento}
+              onChange={(d) => setField('dataDesligamento', d)}
             />
             {dateError && (
               <p className="text-xs text-destructive">
@@ -113,7 +97,9 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
               }
             >
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Selecione o motivo" />
+                <SelectValue placeholder="Selecione o motivo">
+                  {input.motivoDesligamento && TERMINATION_LABELS[input.motivoDesligamento]}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {Object.entries(TERMINATION_LABELS).map(([value, label]) => (
@@ -206,7 +192,9 @@ export function CalculatorForm({ input, dispatch }: CalculatorFormProps) {
                     }
                   >
                     <SelectTrigger className="w-full">
-                      <SelectValue />
+                      <SelectValue>
+                        {AVISO_PREVIO_LABELS[input.avisoPrevio]}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
                       {Object.entries(AVISO_PREVIO_LABELS).map(
